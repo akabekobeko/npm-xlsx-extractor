@@ -1,2 +1,3 @@
-# npm-xlsx-extractor
-Extracte a columns/rows from XLSX file.
+# xlsx-extractor
+
+Extract the colums/rows from XLSX file.
