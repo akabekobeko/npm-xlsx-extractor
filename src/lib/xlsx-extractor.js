@@ -5,8 +5,9 @@ import XlsxUtil from './xlsx-util.js';
  * @type {Object}
  */
 const FilePaths = {
-  SheetBase: 'xl/worksheets/sheet',
-  SharedStrings: 'xl/sharedStrings.xml'
+  WorkBook: 'xl/workbook.xml',
+  SharedStrings: 'xl/sharedStrings.xml',
+  SheetBase: 'xl/worksheets/sheet'
 };
 
 /**
@@ -61,8 +62,8 @@ export default class XlsxExtractor {
     return Promise
     .resolve()
     .then( () => {
-      if( index < 0 && this._count <= index ) {
-        throw new Error( 'The index is out of range.' );
+      if( index < 1 || this._count < index ) {
+        throw new Error( 'The index is out of range: ' + index );
       }
 
       return this._parseXML( index );
@@ -75,18 +76,18 @@ export default class XlsxExtractor {
   /**
    * Extract a sheet.
    *
-   * @param {Object} xmls [description]
+   * @param {SheetData} data Sheet data.
    *
    * @return {Promise} Extract task.
    */
-  _extract( xmls ) {
+  _extract( data ) {
     return new Promise( ( resolve ) => {
-      const cells   = XlsxUtil.getCells( xmls.sheet.worksheet.sheetData[ 0 ].row );
-      const size    = XlsxUtil.getSheetSize( xmls.sheet, cells );
+      const cells   = XlsxUtil.getCells( data.sheet.worksheet.sheetData[ 0 ].row );
+      const size    = XlsxUtil.getSheetSize( data.sheet, cells );
       const rows    = ( size.row.max - size.row.min ) + 1;
       const cols    = ( size.col.max - size.col.min ) + 1;
-      const data    = XlsxUtil.createEmptyCells( rows, cols );
-      const strings = xmls.strings.sst.si;
+      const sheet   = XlsxUtil.createEmptyCells( rows, cols );
+      const strings = data.strings.sst.si;
 
       cells.forEach( ( cell ) => {
         let value = cell.value;
@@ -95,10 +96,13 @@ export default class XlsxExtractor {
           value = XlsxUtil.valueFromStrings( strings[ index ] );
         }
 
-        data[ cell.row - size.row.min ][ cell.col - size.col.min ] = value;
+        sheet[ cell.row - size.row.min ][ cell.col - size.col.min ] = value;
       } );
 
-      resolve( data );
+      resolve( {
+        name:  data.name,
+        sheet: sheet
+      } );
     } );
   }
 
@@ -131,24 +135,45 @@ export default class XlsxExtractor {
    * @return {Promise} Parse task.
    */
   _parseXML( index ) {
-    const zip   = XlsxUtil.unzip( this._path );
-    const tasks = [ XlsxUtil.parseXML( zip.files[ FilePaths.SheetBase + index + '.xml' ] ) ];
-    if( zip.files[ FilePaths.SharedStrings ] ) {
-      tasks.push( XlsxUtil.parseXML( zip.files[ FilePaths.SharedStrings ] ) );
-    }
+    const zip    = XlsxUtil.unzip( this._path );
+    const result = {};
 
     return Promise
-    .all( tasks )
-    .then( ( xmls ) => {
-      const result = {};
-      if( xmls.length < 2 ) {
-        result.sheet = xmls[ 0 ];
-      } else if( xmls[ 0 ].worksheet ) {
-        result.sheet   = xmls[ 0 ];
-        result.strings = xmls[ 1 ];
-      } else {
-        result.sheet   = xmls[ 1 ];
-        result.strings = xmls[ 0 ];
+    .resolve()
+    .then( () => {
+      const xml = zip.files[ FilePaths.WorkBook ].asText();
+      return XlsxUtil.parseXML( xml );
+    } )
+    .then( ( root ) => {
+      // Get a sheet name
+      if( root && root.workbook && root.workbook.sheets && 0 < root.workbook.sheets.length && root.workbook.sheets[ 0 ].sheet ) {
+        root.workbook.sheets[ 0 ].sheet.some( ( sheet ) => {
+          const id = Number( sheet.$.sheetId );
+          if( id === index ) {
+            result.name = ( sheet.$.name || '' );
+            return true;
+          }
+
+          return false;
+        } );
+      }
+
+      const xml = zip.files[ FilePaths.SheetBase + index + '.xml' ].asText();
+      return XlsxUtil.parseXML( xml );
+    } )
+    .then( ( sheet ) => {
+      result.sheet = sheet;
+
+      if( zip.files[ FilePaths.SharedStrings ] ) {
+        const xml = zip.files[ FilePaths.SharedStrings ].asText();
+        return XlsxUtil.parseXML( xml );
+      }
+
+      return Promise.resolve();
+    } )
+    .then( ( strings ) => {
+      if( strings ) {
+        result.strings = strings;
       }
 
       return result;
