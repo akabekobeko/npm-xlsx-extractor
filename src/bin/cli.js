@@ -181,7 +181,7 @@ export default class CLI {
    *
    * @param {String} arg Option.
    *
-   * @return {Object} Range.
+   * @return {Range} Range.
    */
   static _parseRange( arg ) {
     const result = { begin: 0, end: 0 };
