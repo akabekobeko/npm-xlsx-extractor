@@ -8,7 +8,7 @@ export const HelpText =
 `
 Usage: xlsx-extractor [OPTIONS]
 
-  Convert the WordPress XML file to Markdown files.
+  Extract the colums/rows from XLSX file.
 
   Options:
     -h, --help    Display this text.
