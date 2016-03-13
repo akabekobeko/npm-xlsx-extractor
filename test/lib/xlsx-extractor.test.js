@@ -47,8 +47,8 @@ describe( 'XlsxExtractor', () => {
       .then( ( result ) => {
         assert( result.id === 1 );
         assert( result.name === 'Sample Sheet' );
-        assert( result.sheet.length === 10 );
-        assert( result.sheet[ 0 ].length === 17 );
+        assert( result.cells.length === 10 );
+        assert( result.cells[ 0 ].length === 17 );
       } );
     } );
 
@@ -59,8 +59,8 @@ describe( 'XlsxExtractor', () => {
       .then( ( result ) => {
         assert( result.id === 2 );
         assert( result.name === 'Example Sheet' );
-        assert( result.sheet.length === 7 );
-        assert( result.sheet[ 0 ].length === 8 );
+        assert( result.cells.length === 7 );
+        assert( result.cells[ 0 ].length === 8 );
       } );
     } );
   } );

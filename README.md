@@ -41,7 +41,7 @@ Promise
 
 | Name | Type | Description |
 |:--------|:--|:--|
-| path |   String | Path of the XLSX file. |
+| `path` | `String` | Path of the XLSX file. |
 
 **count**
 
@@ -49,11 +49,19 @@ Promise
 
 **extract**
 
-`XlsxExtractor.extract( index )`
+`XlsxExtractor.extract( index )` is promisify.
 
 | Name | Type | Description |
 |:--------|:--|:--|
-| index | Number | Number of the extract sheet. |
+| `index` | `Number` | Number of the extract sheet. |
+
+result:
+
+| Name | Type | Description |
+|:--------|:--|:--|
+| `id` | `Number` | Number of the extract sheets. |
+| `name` | `String` | Name of the sheet. |
+| `cells` | `Array<Array.<String>>` | Cells of the sheet. Empty cell is stored is `""`. |
 
 ### CLI
 

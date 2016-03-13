@@ -103,7 +103,7 @@ export default class XlsxExtractor {
       resolve( {
         id:    id,
         name:  data.name,
-        sheet: sheet
+        cells: sheet
       } );
     } );
   }
