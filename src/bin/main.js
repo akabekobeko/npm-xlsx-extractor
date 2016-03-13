@@ -62,7 +62,8 @@ function main( argv, stdout ) {
     return Promise
     .all( tasks )
     .then( ( results ) => {
-      stdout.write( JSON.stringify( results, null, '  ' ) + '\n' );
+      const sheets = results.sort( ( a, b ) => a.id - b.id );
+      stdout.write( JSON.stringify( sheets, null, '  ' ) + '\n' );
     } );
   } );
 }

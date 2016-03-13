@@ -69,7 +69,7 @@ export default class XlsxExtractor {
       return this._parseXML( index );
     } )
     .then( ( xmls ) => {
-      return this._extract( xmls );
+      return this._extract( index, xmls );
     } );
   }
 
@@ -77,10 +77,11 @@ export default class XlsxExtractor {
    * Extract a sheet.
    *
    * @param {SheetData} data Sheet data.
+   * @param {SheetData} data Sheet data.
    *
    * @return {Promise} Extract task.
    */
-  _extract( data ) {
+  _extract( id, data ) {
     return new Promise( ( resolve ) => {
       const cells   = XlsxUtil.getCells( data.sheet.worksheet.sheetData[ 0 ].row );
       const size    = XlsxUtil.getSheetSize( data.sheet, cells );
@@ -100,6 +101,7 @@ export default class XlsxExtractor {
       } );
 
       resolve( {
+        id:    id,
         name:  data.name,
         sheet: sheet
       } );
