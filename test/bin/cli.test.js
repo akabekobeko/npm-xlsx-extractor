@@ -65,19 +65,19 @@ describe( 'CLI', () => {
       assert( options.input !== expected );
     } );
 
-    it( 'Output', () => {
+    it( 'Range', () => {
       let options = CLI.parseArgv();
-      options = CLI.parseArgv( [ Options.output[ 0 ] ] );
-      assert( options.output.begin === 0 );
-      assert( options.output.end   === 0 );
+      options = CLI.parseArgv( [ Options.range[ 0 ] ] );
+      assert( options.range.begin === 0 );
+      assert( options.range.end   === 0 );
 
-      options = CLI.parseArgv( [ Options.output[ 1 ], '5' ] );
-      assert( options.output.begin === 5 );
-      assert( options.output.end   === 5 );
+      options = CLI.parseArgv( [ Options.range[ 1 ], '5' ] );
+      assert( options.range.begin === 5 );
+      assert( options.range.end   === 5 );
 
-      options = CLI.parseArgv( [ Options.output[ 1 ], '1-4' ] );
-      assert( options.output.begin === 1 );
-      assert( options.output.end   === 4 );
+      options = CLI.parseArgv( [ Options.range[ 1 ], '1-4' ] );
+      assert( options.range.begin === 1 );
+      assert( options.range.end   === 4 );
     } );
 
     it( 'Count', () => {

@@ -17,18 +17,18 @@ Usage: xlsx-extractor [OPTIONS]
 
     -i, --input   Path of the XLSX file.
 
-    -o, --output  Range of sheets to be output.
+    -r, --range   Range of sheets to be output.
                   Specify the numeric value of "N" or "N-N".
                   When omitted will output all of the sheet.
 
     -c, --count   Outputs the number of sheet.
-                  This option overrides the --output.
+                  This option overrides the -r and --range.
 
   Examples:
     $ xlsx-extractor -i sample.xlsx
     $ xlsx-extractor -i sample.xlsx -c
-    $ xlsx-extractor -i sample.xlsx -o 3
-    $ xlsx-extractor -i sample.xlsx -o 1-5
+    $ xlsx-extractor -i sample.xlsx -r 3
+    $ xlsx-extractor -i sample.xlsx -r 1-5
 
   See also:
     https://github.com/akabekobeko/npm-xlsx-extractor/issues
@@ -42,7 +42,7 @@ export const Options = {
   help:    [ '-h', '--help' ],
   version: [ '-v', '--version' ],
   input:   [ '-i', '--input' ],
-  output:  [ '-o', '--output' ],
+  range:   [ '-r', '--range' ],
   count:   [ '-c', '--count' ]
 };
 
@@ -134,10 +134,10 @@ export default class CLI {
           if( value ) { options.input = Path.resolve( value ); }
           break;
 
-        case Options.output[ 0 ]:
-        case Options.output[ 1 ]:
+        case Options.range[ 0 ]:
+        case Options.range[ 1 ]:
           value = CLI._parseArgValue( argv, index );
-          options.output = CLI._parseOutputRange( value );
+          options.range = CLI._parseRange( value );
           break;
 
         case Options.count[ 0 ]:
@@ -151,11 +151,11 @@ export default class CLI {
     } );
 
     if( options.count ) {
-      if( options.output ) {
-        options.output = undefined;
+      if( options.range ) {
+        options.range = undefined;
       }
-    } else if( !( options.output ) ) {
-      options.output = { begin: 0, end: 0 };
+    } else if( !( options.range ) ) {
+      options.range = { begin: 0, end: 0 };
     }
 
     return options;
@@ -183,7 +183,7 @@ export default class CLI {
    *
    * @return {Object} Range.
    */
-  static _parseOutputRange( arg ) {
+  static _parseRange( arg ) {
     const result = { begin: 0, end: 0 };
     if( typeof arg !== 'string' ) { return result; }
 
