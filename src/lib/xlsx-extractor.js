@@ -97,7 +97,13 @@ export default class XlsxExtractor {
           value = XlsxUtil.valueFromStrings( strings[ index ] );
         }
 
-        sheet[ cell.row - size.row.min ][ cell.col - size.col.min ] = value;
+        let row = cell.row - size.row.min;
+        row = (row >= 0) ? row : size.row.min;
+
+        let col = cell.col - size.col.min;
+        col = (col >= 0) ? col : size.col.min;
+
+        sheet[ row ][ col ] = value;
       } );
 
       resolve( {
