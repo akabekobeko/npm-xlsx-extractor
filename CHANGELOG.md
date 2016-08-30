@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 1.0.2
+
+* Fix
+  * [There is a file that parse error occurs](https://github.com/akabekobeko/npm-xlsx-extractor/issues/12)
+
 ## 1.0.1
 
 * Update a node modules
