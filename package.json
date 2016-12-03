@@ -1,7 +1,7 @@
 {
   "name": "xlsx-extractor",
   "description": "Extract the colums/rows from XLSX file.",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "akabeko (http://akabeko.me/)",
   "license": "MIT",
   "homepage": "https://github.com/akabekobeko/npm-xlsx-extractor#readme",
@@ -24,6 +24,18 @@
   "bugs": {
     "url": "https://github.com/akabekobeko/npm-xlsx-extractor/issues"
   },
+  "babel": {
+    "presets": [
+      "latest"
+    ],
+    "env": {
+      "development": {
+        "presets": [
+          "power-assert"
+        ]
+      }
+    }
+  },
   "scripts": {
     "test": "mocha",
     "start": "npm run watch",
@@ -37,12 +49,12 @@
     "xml2js": "^0.4.17"
   },
   "devDependencies": {
-    "babel-cli": "^6.14.0",
-    "babel-preset-es2015": "^6.14.0",
+    "babel-cli": "^6.18.0",
+    "babel-preset-latest": "^6.16.0",
     "babel-preset-power-assert": "^1.0.0",
-    "babel-register": "^6.14.0",
+    "babel-register": "^6.18.0",
     "esdoc": "^0.4.8",
-    "mocha": "^3.0.2",
-    "power-assert": "^1.4.1"
+    "mocha": "^3.2.0",
+    "power-assert": "^1.4.2"
   }
 }
