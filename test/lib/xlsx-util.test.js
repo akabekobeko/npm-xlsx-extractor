@@ -1,5 +1,5 @@
-import assert from 'power-assert';
-import XlsxUtil from '../../src/lib/xlsx-util.js';
+const assert = require( 'power-assert' );
+const XlsxUtil = require( '../../src/lib/xlsx-util.js' );
 
 /** @test {XlsxUtil} */
 describe( 'XlsxUtil', () => {

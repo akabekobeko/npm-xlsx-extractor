@@ -1,4 +1,4 @@
-import XlsxUtil from './xlsx-util.js';
+const XlsxUtil = require( './xlsx-util.js' );
 
 /**
  * Defines the file path in the XLSX.
@@ -19,7 +19,7 @@ const MaxSheets = 256;
 /**
  * Extract the colums/rows from XLSX file.
  */
-export default class XlsxExtractor {
+class XlsxExtractor {
   /**
    * Initialize instance.
    *
@@ -98,10 +98,10 @@ export default class XlsxExtractor {
         }
 
         let row = cell.row - size.row.min;
-        row = (row >= 0) ? row : size.row.min;
+        row = ( row >= 0 ) ? row : size.row.min;
 
         let col = cell.col - size.col.min;
-        col = (col >= 0) ? col : size.col.min;
+        col = ( col >= 0 ) ? col : size.col.min;
 
         sheet[ row ][ col ] = value;
       } );
@@ -188,3 +188,5 @@ export default class XlsxExtractor {
     } );
   }
 }
+
+module.exports = XlsxExtractor;
