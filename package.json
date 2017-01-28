@@ -1,12 +1,15 @@
 {
   "name": "xlsx-extractor",
   "description": "Extract the colums/rows from XLSX file.",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "author": "akabeko (http://akabeko.me/)",
   "license": "MIT",
   "homepage": "https://github.com/akabekobeko/npm-xlsx-extractor#readme",
+  "engines": {
+    "node": ">= 6"
+  },
   "main": "index.js",
-  "bin": "bin/main.js",
+  "bin": "src/bin/main.js",
   "files": [
     "bin",
     "lib",
@@ -24,44 +27,28 @@
   "bugs": {
     "url": "https://github.com/akabekobeko/npm-xlsx-extractor/issues"
   },
-  "babel": {
-    "presets": [
-      "latest"
-    ],
-    "env": {
-      "development": {
-        "presets": [
-          "power-assert"
-        ]
-      }
-    }
-  },
   "esdoc": {
     "source": "./src",
     "destination": "./esdoc",
     "test": {
       "type": "mocha",
       "source": "./test"
-    }
+    },
+    "plugins": [
+      { "name": "esdoc-node" }
+    ]
   },
   "scripts": {
-    "test": "mocha",
-    "start": "npm run watch",
-    "esdoc": "esdoc",
-    "build": "babel src --out-dir ./",
-    "watch": "babel src --out-dir ./ --watch",
-    "prepublish": "npm run build"
+    "test": "mocha --timeout 50000 test/**/*.test.js",
+    "esdoc": "esdoc"
   },
   "dependencies": {
     "node-zip": "^1.1.1",
     "xml2js": "^0.4.17"
   },
   "devDependencies": {
-    "babel-cli": "^6.18.0",
-    "babel-preset-latest": "^6.16.0",
-    "babel-preset-power-assert": "^1.0.0",
-    "babel-register": "^6.18.0",
     "esdoc": "^0.5.2",
+    "esdoc-node": "^1.0.0",
     "mocha": "^3.2.0",
     "power-assert": "^1.4.2"
   }

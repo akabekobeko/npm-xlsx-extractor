@@ -1,5 +1,5 @@
-import assert from 'power-assert';
-import XlsxExtractor from '../../src/lib/xlsx-extractor.js';
+const assert = require( 'power-assert' );
+const XlsxExtractor = require( '../../src/lib/xlsx-extractor.js' );
 
 /** @test {XlsxExtractor} */
 describe( 'XlsxExtractor', () => {

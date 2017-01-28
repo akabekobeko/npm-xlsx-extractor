@@ -1,2 +1,1 @@
-import XlsxExtractor from './xlsx-extractor.js';
-module.exports = XlsxExtractor;
+module.exports = require( './xlsx-extractor.js' );

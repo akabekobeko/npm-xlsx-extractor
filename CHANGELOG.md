@@ -1,5 +1,10 @@
 # ChangeLog
 
+## 1.1.0
+
+* Change
+  * [Drop transpile by Babel](https://github.com/akabekobeko/npm-xlsx-extractor/issues/19)
+
 ## 1.0.3
 
 * Change

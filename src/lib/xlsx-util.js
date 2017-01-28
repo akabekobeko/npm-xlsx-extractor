@@ -1,12 +1,12 @@
-import Fs from 'fs';
-import Path from 'path';
-import XmlParser from 'xml2js';
-import Zip from 'node-zip';
+const Fs = require( 'fs' );
+const Path = require( 'path' );
+const XmlParser = require( 'xml2js' );
+const Zip = require( 'node-zip' );
 
 /**
  * Provides utility methods for XLSX.
  */
-export default class XlsxUtil {
+class XlsxUtil {
   /**
    * Create a empty cells.
    *
@@ -237,3 +237,5 @@ export default class XlsxUtil {
     return value;
   }
 }
+
+module.exports = XlsxUtil;
