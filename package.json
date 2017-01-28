@@ -11,8 +11,8 @@
   "main": "index.js",
   "bin": "src/bin/main.js",
   "files": [
-    "bin",
-    "lib",
+    "src/bin",
+    "src/lib",
     "index.js"
   ],
   "keywords": [
