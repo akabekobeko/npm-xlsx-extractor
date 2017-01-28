@@ -36,10 +36,18 @@
       }
     }
   },
+  "esdoc": {
+    "source": "./src",
+    "destination": "./esdoc",
+    "test": {
+      "type": "mocha",
+      "source": "./test"
+    }
+  },
   "scripts": {
     "test": "mocha",
     "start": "npm run watch",
-    "esdoc": "esdoc -c esdoc.json",
+    "esdoc": "esdoc",
     "build": "babel src --out-dir ./",
     "watch": "babel src --out-dir ./ --watch",
     "prepublish": "npm run build"
@@ -53,7 +61,7 @@
     "babel-preset-latest": "^6.16.0",
     "babel-preset-power-assert": "^1.0.0",
     "babel-register": "^6.18.0",
-    "esdoc": "^0.4.8",
+    "esdoc": "^0.5.2",
     "mocha": "^3.2.0",
     "power-assert": "^1.4.2"
   }
