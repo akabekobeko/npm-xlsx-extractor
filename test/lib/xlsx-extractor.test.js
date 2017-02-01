@@ -1,4 +1,4 @@
-const assert = require( 'power-assert' );
+const assert = require( 'assert' );
 const XlsxExtractor = require( '../../src/lib/xlsx-extractor.js' );
 
 /** @test {XlsxExtractor} */
