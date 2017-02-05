@@ -1,3 +1,5 @@
+'use strict';
+
 const assert = require( 'assert' );
 const XlsxUtil = require( '../../src/lib/xlsx-util.js' );
 

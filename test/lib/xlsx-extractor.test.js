@@ -1,3 +1,5 @@
+'use strict';
+
 const assert = require( 'assert' );
 const XlsxExtractor = require( '../../src/lib/xlsx-extractor.js' );
 

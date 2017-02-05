@@ -1,6 +1,6 @@
 # xlsx-extractor
 
-![node v6, v7](https://img.shields.io/badge/node-v6%2C%20v7-green.svg)
+[![Support Node of LTS](https://img.shields.io/badge/node-LTS-brightgreen.svg)](https://nodejs.org/)
 [![npm version](https://badge.fury.io/js/xlsx-extractor.svg)](https://badge.fury.io/js/xlsx-extractor)
 [![Build Status](https://travis-ci.org/akabekobeko/npm-xlsx-extractor.svg?branch=master)](https://travis-ci.org/akabekobeko/npm-xlsx-extractor)
 [![Document](https://doc.esdoc.org/github.com/akabekobeko/npm-xlsx-extractor/badge.svg?t=0)](https://doc.esdoc.org/github.com/akabekobeko/npm-xlsx-extractor)
