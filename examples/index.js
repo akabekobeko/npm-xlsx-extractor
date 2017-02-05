@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 const XlsxExtractor = require( 'xlsx-extractor' );
 

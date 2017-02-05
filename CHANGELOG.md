@@ -1,5 +1,10 @@
 # ChangeLog
 
+# 1.1.1
+
+* Change
+  * Node v4 support [#22](https://github.com/akabekobeko/npm-xlsx-extractor/issues/22)
+
 ## 1.1.0
 
 * Change

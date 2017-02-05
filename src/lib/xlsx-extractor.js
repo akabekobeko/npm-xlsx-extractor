@@ -1,3 +1,5 @@
+'use strict';
+
 const XlsxUtil = require( './xlsx-util.js' );
 
 /**
