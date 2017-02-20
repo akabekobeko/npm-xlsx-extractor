@@ -1,9 +1,9 @@
-'use strict';
+'use strict'
 
-const Fs = require( 'fs' );
-const Path = require( 'path' );
-const XmlParser = require( 'xml2js' );
-const Zip = require( 'node-zip' );
+const Fs = require('fs')
+const Path = require('path')
+const XmlParser = require('xml2js')
+const Zip = require('node-zip')
 
 /**
  * Provides utility methods for XLSX.
@@ -17,18 +17,18 @@ class XlsxUtil {
    *
    * @return {Array.<Array.<String>>} Cells.
    */
-  static createEmptyCells( rows, cols ) {
-    const arr = [];
-    for( let i = 0; i < rows; ++i ) {
-      const row = [];
-      for( let j = 0; j < cols; ++j ) {
-        row.push( '' );
+  static createEmptyCells (rows, cols) {
+    const arr = []
+    for (let i = 0; i < rows; ++i) {
+      const row = []
+      for (let j = 0; j < cols; ++j) {
+        row.push('')
       }
 
-      arr.push( row );
+      arr.push(row)
     }
 
-    return arr;
+    return arr
   }
 
   /**
@@ -38,25 +38,25 @@ class XlsxUtil {
    *
    * @return {Array.<Object>} Cells.
    */
-  static getCells( rows ) {
-    const cells = [];
+  static getCells (rows) {
+    const cells = []
     rows
-    .filter( ( row ) => {
-      return ( row.c && 0 < row.c.length );
-    } )
-    .forEach( ( row ) => {
-      row.c.forEach( ( cell ) => {
-        const position = XlsxUtil.getPosition( cell.$.r );
-        cells.push( {
-          row:   position.row,
-          col:   position.col,
-          type:  ( cell.$.t ? cell.$.t : '' ),
-          value: ( cell.v && 0 < cell.v.length ? cell.v[ 0 ] : '' )
-        } );
-      } );
-    } );
+    .filter((row) => {
+      return (row.c && 0 < row.c.length)
+    })
+    .forEach((row) => {
+      row.c.forEach((cell) => {
+        const position = XlsxUtil.getPosition(cell.$.r)
+        cells.push({
+          row: position.row,
+          col: position.col,
+          type: (cell.$.t ? cell.$.t : ''),
+          value: (cell.v && 0 < cell.v.length ? cell.v[ 0 ] : '')
+        })
+      })
+    })
 
-    return cells;
+    return cells
   }
 
   /**
@@ -66,16 +66,17 @@ class XlsxUtil {
    *
    * @return {Object} Position.
    */
-  static getPosition( text ) {
-    const units = text.split( /([0-9]+)/ ); // 'A1' -> [ A, 1 ]
-    if( units.length < 2 ) {
-      return { row: 0, col: 0 };
+  static getPosition (text) {
+    // 'A1' -> [ A, 1 ]
+    const units = text.split(/([0-9]+)/)
+    if (units.length < 2) {
+      return { row: 0, col: 0 }
     }
 
     return {
-      row: parseInt( units[ 1 ], 10 ),
-      col: XlsxUtil.numOfColumn( units[ 0 ] )
-    };
+      row: parseInt(units[ 1 ], 10),
+      col: XlsxUtil.numOfColumn(units[ 0 ])
+    }
   }
 
   /**
@@ -86,29 +87,29 @@ class XlsxUtil {
    *
    * @return {Object} Size
    */
-  static getSheetSize( sheet, cells ) {
+  static getSheetSize (sheet, cells) {
     // Get the there if size is defined
-    if( sheet && sheet.worksheet && sheet.worksheet.dimension && 0 <= sheet.worksheet.dimension.length ) {
-      const range = sheet.worksheet.dimension[ 0 ].$.ref.split( ':' );
-      if( range.length === 2 ) {
-        const min = XlsxUtil.getPosition( range[ 0 ] );
-        const max = XlsxUtil.getPosition( range[ 1 ] );
+    if (sheet && sheet.worksheet && sheet.worksheet.dimension && 0 <= sheet.worksheet.dimension.length) {
+      const range = sheet.worksheet.dimension[ 0 ].$.ref.split(':')
+      if (range.length === 2) {
+        const min = XlsxUtil.getPosition(range[ 0 ])
+        const max = XlsxUtil.getPosition(range[ 1 ])
 
         return {
           row: { min: min.row, max: max.row },
           col: { min: min.col, max: max.col }
-        };
+        }
       }
     }
 
-    const ascend = ( a, b ) => { return a - b; };
-    const rows   = cells.map( ( cell ) => { return cell.row; } ).sort( ascend );
-    const cols   = cells.map( ( cell ) => { return cell.col; } ).sort( ascend );
+    const ascend = (a, b) => { return a - b }
+    const rows   = cells.map((cell) => { return cell.row }).sort(ascend)
+    const cols   = cells.map((cell) => { return cell.col }).sort(ascend)
 
     return {
       row: { min: rows[ 0 ], max: rows[ rows.length - 1 ] },
       col: { min: cols[ 0 ], max: cols[ cols.length - 1 ] }
-    };
+    }
   }
 
   /**
@@ -118,17 +119,17 @@ class XlsxUtil {
    *
    * @return {Number} Column number, otherwise -1.
    */
-  static numOfColumn( text ) {
-    const letters = [ '', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ];
-    const col     = text.trim().split( '' );
+  static numOfColumn (text) {
+    const letters = [ '', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ]
+    const col     = text.trim().split('')
 
-    let num = 0;
-    for( let i = 0, max = col.length; i < max; ++i ) {
-      num *= 26;
-      num += letters.indexOf( col[ i ] );
+    let num = 0
+    for (let i = 0, max = col.length; i < max; ++i) {
+      num *= 26
+      num += letters.indexOf(col[ i ])
     }
 
-    return num;
+    return num
   }
 
   /**
@@ -138,15 +139,15 @@ class XlsxUtil {
    *
    * @return {String} Parse result.
    */
-  static parseR( r ) {
-    let value = '';
-    r.forEach( ( obj ) => {
-      if( obj.t ) {
-        value += XlsxUtil.parseT( obj.t );
+  static parseR (r) {
+    let value = ''
+    r.forEach((obj) => {
+      if (obj.t) {
+        value += XlsxUtil.parseT(obj.t)
       }
-    } );
+    })
 
-    return value;
+    return value
   }
 
   /**
@@ -156,27 +157,27 @@ class XlsxUtil {
    *
    * @return {String} Parse result.
    */
-  static parseT( t ) {
-    let value = '';
-    t.forEach( ( obj ) => {
-      switch( typeof obj ) {
+  static parseT (t) {
+    let value = ''
+    t.forEach((obj) => {
+      switch (typeof obj) {
         case 'string':
-          value += obj;
-          break;
+          value += obj
+          break
 
         //  The value of xml:space="preserve" is stored in the underscore
         case 'object':
-          if( obj._ && typeof obj._ === 'string' ) {
-            value += obj._;
+          if (obj._ && typeof obj._ === 'string') {
+            value += obj._
           }
-          break;
+          break
 
         default:
-          break;
+          break
       }
-    } );
+    })
 
-    return value;
+    return value
   }
 
   /**
@@ -186,12 +187,12 @@ class XlsxUtil {
    *
    * @return {Promise} XML parse task.
    */
-  static parseXML( xml ) {
-    return new Promise( ( resolve, reject ) => {
-      XmlParser.parseString( xml, ( err, obj ) => {
-        return ( err ? reject( err ) : resolve( obj ) );
-      } );
-    } );
+  static parseXML (xml) {
+    return new Promise((resolve, reject) => {
+      XmlParser.parseString(xml, (err, obj) => {
+        return (err ? reject(err) : resolve(obj))
+      })
+    })
   }
 
   /**
@@ -201,12 +202,12 @@ class XlsxUtil {
    *
    * @return {ZipObject} If success zip object, otherwise null.
    */
-  static unzip( path ) {
+  static unzip (path) {
     try {
-      const file = Fs.readFileSync( Path.resolve( path ) );
-      return Zip( file );
-    } catch( err ) {
-      return null;
+      const file = Fs.readFileSync(Path.resolve(path))
+      return Zip(file)
+    } catch (err) {
+      return null
     }
   }
 
@@ -217,27 +218,27 @@ class XlsxUtil {
    *
    * @return {String} Value.
    */
-  static valueFromStrings( str ) {
-    let   value = '';
-    const keys  = Object.keys( str );
+  static valueFromStrings (str) {
+    let   value = ''
+    const keys  = Object.keys(str)
 
-    keys.forEach( ( key ) => {
-      switch( key ) {
+    keys.forEach((key) => {
+      switch (key) {
         case 't':
-          value += XlsxUtil.parseT( str[ key ] );
-          break;
+          value += XlsxUtil.parseT(str[ key ])
+          break
 
         case 'r':
-          value += XlsxUtil.parseR( str[ key ] );
-          break;
+          value += XlsxUtil.parseR(str[ key ])
+          break
 
         default:
-          break;
+          break
       }
-    } );
+    })
 
-    return value;
+    return value
   }
 }
 
-module.exports = XlsxUtil;
+module.exports = XlsxUtil
