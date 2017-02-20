@@ -4,6 +4,7 @@
 [![npm version](https://badge.fury.io/js/xlsx-extractor.svg)](https://badge.fury.io/js/xlsx-extractor)
 [![Build Status](https://travis-ci.org/akabekobeko/npm-xlsx-extractor.svg?branch=master)](https://travis-ci.org/akabekobeko/npm-xlsx-extractor)
 [![Document](https://doc.esdoc.org/github.com/akabekobeko/npm-xlsx-extractor/badge.svg?t=0)](https://doc.esdoc.org/github.com/akabekobeko/npm-xlsx-extractor)
+[![Standard - JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](http://standardjs.com/)
 
 Extract the colums/rows from XLSX file.
 
@@ -18,22 +19,22 @@ $ npm install xlsx-extractor
 ### Node API
 
 ```js
-const XlsxExtractor = require( 'xlsx-extractor' );
+const XlsxExtractor = require('xlsx-extractor');
 
-const extractor = new XlsxExtractor( './sample.xlsx' );
+const extractor = new XlsxExtractor('./sample.xlsx');
 const tasks     = [];
-for( let i = 1, max = extractor.count; i <= max; ++i ) {
-  tasks.push( extractor.extract( i ) );
+for (let i = 1, max = extractor.count; i <= max; ++i) {
+  tasks.push(extractor.extract(i));
 }
 
 Promise
-.all( tasks )
-.then( ( results ) => {
-  console.log( JSON.stringify( results, null, '  ' ) + '\n' );
+.all(tasks)
+.then((results) => {
+  console.log(JSON.stringify(results, null, '  ') + '\n');
 } )
-.catch( ( err ) => {
-  console.error( err );
-} );
+.catch((err) => {
+  console.error(err);
+});
 ```
 
 **constructor**

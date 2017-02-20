@@ -1,5 +1,10 @@
 # ChangeLog
 
+# 1.1.2
+
+* Fix
+  * CLI is not work [#24](https://github.com/akabekobeko/npm-xlsx-extractor/issues/24)
+
 # 1.1.1
 
 * Change
