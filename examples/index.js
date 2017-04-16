@@ -1,8 +1,6 @@
-'use strict'
-
 const XlsxExtractor = require('xlsx-extractor')
 
-const extractor = new XlsxExtractor('../test/data/sample.xlsx')
+const extractor = new XlsxExtractor('./sample.xlsx')
 const tasks     = []
 for (let i = 1, max = extractor.count; i <= max; ++i) {
   tasks.push(extractor.extract(i))

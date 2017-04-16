@@ -1,7 +1,5 @@
-'use strict'
-
-const assert = require('assert')
-const XlsxExtractor = require('../../src/lib/xlsx-extractor.js')
+import assert from 'assert'
+import XlsxExtractor from './xlsx-extractor.js'
 
 /** @test {XlsxExtractor} */
 describe('XlsxExtractor', () => {
@@ -17,7 +15,7 @@ describe('XlsxExtractor', () => {
 
   /** @test {XlsxExtractor#extract} */
   describe('extract', () => {
-    const sampleXML = './test/data/sample.xlsx'
+    const sampleXML = './examples/sample.xlsx'
 
     it('Count', () => {
       const extractor = new XlsxExtractor(sampleXML)

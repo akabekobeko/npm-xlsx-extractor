@@ -1,12 +1,10 @@
-'use strict'
-
-const Path = require('path')
+import Path from 'path'
 
 /**
  * Help text.
  * @type {String}
  */
-const HelpText =
+export const HelpText =
 `
 Usage: xlsx-extractor [OPTIONS]
 
@@ -40,7 +38,7 @@ Usage: xlsx-extractor [OPTIONS]
  * CLI options.
  * @type {Object}
  */
-const Options = {
+export const Options = {
   help: [ '-h', '--help' ],
   version: [ '-v', '--version' ],
   input: [ '-i', '--input' ],
@@ -51,7 +49,7 @@ const Options = {
 /**
  * Provides a command line interface.
  */
-class CLI {
+export default class CLI {
   /**
    * Parse for the command line argumens.
    *
@@ -207,10 +205,4 @@ class CLI {
 
     return result
   }
-}
-
-module.exports = {
-  HelpText: HelpText,
-  Options: Options,
-  CLI: CLI
 }

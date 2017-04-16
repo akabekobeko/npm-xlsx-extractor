@@ -1,9 +1,7 @@
 #!/usr/bin/env node
 
-'use strict'
-
-const CLI = require('./cli.js').CLI
-const XlsxExtractor = require('../lib/index.js')
+import CLI from './cli.js'
+import XlsxExtractor from '../lib/index.js'
 
 /**
  * Create a extract tasks.
