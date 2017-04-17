@@ -1,5 +1,17 @@
 # ChangeLog
 
+## v1.2.2
+
+### Fix
+
+* It does not work in release environment [#28](https://github.com/akabekobeko/npm-xlsx-extractor/issues/28)
+
+## v1.2.1
+
+### Fix
+
+* Installation failed [#27](https://github.com/akabekobeko/npm-xlsx-extractor/issues/27)
+
 ## v1.2.0
 
 ### Change
