@@ -1,6 +1,4 @@
-'use strict'
-
-const XlsxUtil = require('./xlsx-util.js')
+import XlsxUtil from './xlsx-util.js'
 
 /**
  * Defines the file path in the XLSX.
@@ -21,7 +19,7 @@ const MaxSheets = 256
 /**
  * Extract the colums/rows from XLSX file.
  */
-class XlsxExtractor {
+export default class XlsxExtractor {
   /**
    * Initialize instance.
    *
@@ -190,5 +188,3 @@ class XlsxExtractor {
     })
   }
 }
-
-module.exports = XlsxExtractor

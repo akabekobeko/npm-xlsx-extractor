@@ -1,7 +1,5 @@
-'use strict'
-
-const assert = require('assert')
-const XlsxUtil = require('../../src/lib/xlsx-util.js')
+import assert from 'assert'
+import XlsxUtil from './xlsx-util.js'
 
 /** @test {XlsxUtil} */
 describe('XlsxUtil', () => {
@@ -12,20 +10,20 @@ describe('XlsxUtil', () => {
       const cols  = 5
       const cells = XlsxUtil.createEmptyCells(rows, cols)
       assert(cells.length === rows)
-      assert(cells[ 0 ].length === cols)
+      assert(cells[0].length === cols)
     })
   })
 
   /** @test {XlsxUtil#getSheetSize} */
   describe('getSheetSize', () => {
     const cells = [
-      { row: 1, col: 20 },
-      { row: 2, col: 11 },
-      { row: 3, col: 47 }
+      {row: 1, col: 20},
+      {row: 2, col: 11},
+      {row: 3, col: 47}
     ]
 
     it('From dimension', () => {
-      const sheet  = { worksheet: { dimension: [ { $: { ref: 'D1:E23' } } ] } }
+      const sheet  = {worksheet: {dimension: [{$: {ref: 'D1:E23'}}]}}
       const actual = XlsxUtil.getSheetSize(sheet, cells)
       assert(actual.row.min === 1)
       assert(actual.row.max === 23)
