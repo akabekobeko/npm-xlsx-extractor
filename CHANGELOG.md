@@ -1,35 +1,52 @@
 # ChangeLog
 
-# 1.1.2
+## v1.2.0
 
-* Fix
-  * CLI is not work [#24](https://github.com/akabekobeko/npm-xlsx-extractor/issues/24)
+### Change
 
-# 1.1.1
+* Using the Babel [#25](https://github.com/akabekobeko/npm-xlsx-extractor/issues/25)
 
-* Change
-  * Node v4 support [#22](https://github.com/akabekobeko/npm-xlsx-extractor/issues/22)
+### Breaking Change
 
-## 1.1.0
+* Drop Node v4 support
+  * Because Node v4 became `MAINTENANCE` from `ACTIVE` LTS
+  * Since breaking change, I updated `major` of `semver` (v1.1.x to v1.2.x)
 
-* Change
-  * [Drop transpile by Babel](https://github.com/akabekobeko/npm-xlsx-extractor/issues/19)
+## v1.1.2
 
-## 1.0.3
+### Fix
 
-* Change
-  * [Node v7 support](https://github.com/akabekobeko/npm-xlsx-extractor/issues/15)
+* CLI is not work [#24](https://github.com/akabekobeko/npm-xlsx-extractor/issues/24)
 
-## 1.0.2
+## v1.1.1
 
-* Fix
-  * [There is a file that parse error occurs](https://github.com/akabekobeko/npm-xlsx-extractor/issues/12)
+### Change
 
-## 1.0.1
+* Node v4 support [#22](https://github.com/akabekobeko/npm-xlsx-extractor/issues/22)
+
+## v1.1.0
+
+### Change
+
+* Drop transpile by Babel [#19](https://github.com/akabekobeko/npm-xlsx-extractor/issues/19)
+
+## v1.0.3
+
+### Change
+
+* Node v7 support [#15](https://github.com/akabekobeko/npm-xlsx-extractor/issues/15)
+
+## v1.0.2
+
+### Fix
+
+* There is a file that parse error occurs [#12](https://github.com/akabekobeko/npm-xlsx-extractor/issues/12)
+
+## v1.0.1
 
 * Update a node modules
 * Node v6 support
 
-## 1.0.0
+## v1.0.0
 
 * First release
