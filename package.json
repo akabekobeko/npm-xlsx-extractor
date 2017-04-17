@@ -1,7 +1,7 @@
 {
   "name": "xlsx-extractor",
   "description": "Extract the colums/rows from XLSX file.",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": "akabeko (http://akabeko.me/)",
   "license": "MIT",
   "homepage": "https://github.com/akabekobeko/npm-xlsx-extractor#readme",
@@ -58,7 +58,7 @@
     "eslint": "eslint ./src",
     "build": "babel src --out-dir dist --ignore *.test.js,typedef.js",
     "watch": "babel src --out-dir dist --ignore *.test.js,typedef.js --watch",
-    "prepublishOnly": "npm run build"
+    "prepare": "npm run build"
   },
   "dependencies": {
     "node-zip": "^1.1.1",
