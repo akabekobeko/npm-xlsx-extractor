@@ -1,14 +1,14 @@
 {
   "name": "xlsx-extractor",
   "description": "Extract the colums/rows from XLSX file.",
-  "version": "1.2.1",
+  "version": "1.2.2",
   "author": "akabeko (http://akabeko.me/)",
   "license": "MIT",
   "homepage": "https://github.com/akabekobeko/npm-xlsx-extractor#readme",
   "engines": {
     "node": ">= 6"
   },
-  "main": "dist/lib/xlsx-extractor.js",
+  "main": "dist/lib/index.js",
   "bin": "dist/bin/index.js",
   "files": [
     "dist"
