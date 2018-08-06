@@ -34,3 +34,4 @@ node_modules
 
 /dist
 /esdoc
+package-lock.json
