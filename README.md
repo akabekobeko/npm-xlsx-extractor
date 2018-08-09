@@ -18,6 +18,8 @@ $ npm install xlsx-extractor
 
 ### Node API
 
+Specify index and extract as a single sheet.
+
 ```js
 const XlsxExtractor = require('xlsx-extractor');
 
@@ -28,42 +30,67 @@ for (let i = 1, max = extractor.count; i <= max; ++i) {
 }
 
 Promise
-.all(tasks)
-.then((results) => {
-  console.log(JSON.stringify(results, null, '  ') + '\n');
-} )
-.catch((err) => {
-  console.error(err);
-});
+  .all(tasks)
+  .then((results) => {
+    console.log(JSON.stringify(results, null, '  ') + '\n');
+  })
+  .catch((err) => {
+    console.error(err);
+  });
 ```
 
-**constructor**
+Extract all sheets at once.
 
-`new XlsxExtractor( path )`
+```js
+const XlsxExtractor = require('xlsx-extractor');
 
-| Name | Type | Description |
-|:--------|:--|:--|
-| `path` | `String` | Path of the XLSX file. |
+const extractor = new XlsxExtractor('./sample.xlsx');
 
-**count**
+extractor
+  .extractAll()
+  .then((results) => {
+    console.log(JSON.stringify(results, null, '  ') + '\n');
+  })
+  .catch((err) => {
+    console.error(err);
+  });
+```
+
+#### constructor
+
+`new XlsxExtractor(path)`
+
+|Name|Type|Description|
+|---|---|---|
+|`path`|`String`|Path of the XLSX file.|
+
+#### count
 
 `XlsxExtractor.count` is a number of sheets.
 
-**extract**
+#### extract
 
-`XlsxExtractor.extract( index )` is promisify.
+`XlsxExtractor.extract(index)` is promisify.
 
-| Name | Type | Description |
-|:--------|:--|:--|
-| `index` | `Number` | Number of the extract sheet. |
+|Name|Type|Description|
+|---|---|---|
+|`index`|`Number`|Number of the extract sheet.|
 
-result:
+**result (Primise then):**
 
-| Name | Type | Description |
-|:--------|:--|:--|
-| `id` | `Number` | Number of the extract sheets. |
-| `name` | `String` | Name of the sheet. |
-| `cells` | `Array<Array.<String>>` | Cells of the sheet. Empty cell is stored is `""`. |
+|Name|Type|Description|
+|---|---|---|
+|`id`|`Number`|Number of the extract sheets.|
+|`name`|`String`|Name of the sheet.|
+|`cells`|`Array<String[]>`|Cells of the sheet. Empty cell is stored is `""`.|
+
+#### extractAll
+
+`XlsxExtractor.extractAll()` is promisify.
+
+**result (Primise then):**
+
+Returns the result of `XlsxExtractor.extract` as an `Array` of sheets.
 
 ### CLI
 
@@ -74,15 +101,11 @@ Usage: xlsx-extractor [OPTIONS]
 
   Options:
     -h, --help    Display this text.
-
     -v, --version Display the version number.
-
     -i, --input   Path of the XLSX file.
-
     -r, --range   Range of sheets to be output.
                   Specify the numeric value of "N" or "N-N".
                   When omitted will output all of the sheet.
-
     -c, --count   Outputs the number of sheet.
                   This option overrides the -r and --range.
 

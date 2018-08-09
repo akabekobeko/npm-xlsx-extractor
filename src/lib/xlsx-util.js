@@ -13,7 +13,7 @@ export default class XlsxUtil {
    * @param {Number} rows Rows count.
    * @param {Number} cols Columns count.
    *
-   * @return {Array.<Array.<String>>} Cells.
+   * @return {Array.<String[]>} Cells.
    */
   static createEmptyCells (rows, cols) {
     const arr = []
@@ -32,27 +32,27 @@ export default class XlsxUtil {
   /**
    * Get a cells from a rows.
    *
-   * @param {Array.<Object>} rows Rows.
+   * @param {Object[]} rows Rows.
    *
-   * @return {Array.<Object>} Cells.
+   * @return {Object[]} Cells.
    */
   static getCells (rows) {
     const cells = []
     rows
-    .filter((row) => {
-      return (row.c && 0 < row.c.length)
-    })
-    .forEach((row) => {
-      row.c.forEach((cell) => {
-        const position = XlsxUtil.getPosition(cell.$.r)
-        cells.push({
-          row: position.row,
-          col: position.col,
-          type: (cell.$.t ? cell.$.t : ''),
-          value: (cell.v && 0 < cell.v.length ? cell.v[ 0 ] : '')
+      .filter((row) => {
+        return (row.c && 0 < row.c.length)
+      })
+      .forEach((row) => {
+        row.c.forEach((cell) => {
+          const position = XlsxUtil.getPosition(cell.$.r)
+          cells.push({
+            row: position.row,
+            col: position.col,
+            type: (cell.$.t ? cell.$.t : ''),
+            value: (cell.v && 0 < cell.v.length ? cell.v[0] : '')
+          })
         })
       })
-    })
 
     return cells
   }
@@ -65,33 +65,33 @@ export default class XlsxUtil {
    * @return {Object} Position.
    */
   static getPosition (text) {
-    // 'A1' -> [ A, 1 ]
+    // 'A1' -> [A, 1]
     const units = text.split(/([0-9]+)/)
     if (units.length < 2) {
       return { row: 0, col: 0 }
     }
 
     return {
-      row: parseInt(units[ 1 ], 10),
-      col: XlsxUtil.numOfColumn(units[ 0 ])
+      row: parseInt(units[1], 10),
+      col: XlsxUtil.numOfColumn(units[0])
     }
   }
 
   /**
    * Get the size of the sheet.
    *
-   * @param {Object}        sheet Sheet data.
-   * @param {Array.<Array>} cells Cells.
+   * @param {Object} sheet Sheet data.
+   * @param {Object[]} cells Cells.
    *
    * @return {Object} Size
    */
   static getSheetSize (sheet, cells) {
     // Get the there if size is defined
     if (sheet && sheet.worksheet && sheet.worksheet.dimension && 0 <= sheet.worksheet.dimension.length) {
-      const range = sheet.worksheet.dimension[ 0 ].$.ref.split(':')
+      const range = sheet.worksheet.dimension[0].$.ref.split(':')
       if (range.length === 2) {
-        const min = XlsxUtil.getPosition(range[ 0 ])
-        const max = XlsxUtil.getPosition(range[ 1 ])
+        const min = XlsxUtil.getPosition(range[0])
+        const max = XlsxUtil.getPosition(range[1])
 
         return {
           row: { min: min.row, max: max.row },
@@ -101,12 +101,12 @@ export default class XlsxUtil {
     }
 
     const ascend = (a, b) => { return a - b }
-    const rows   = cells.map((cell) => { return cell.row }).sort(ascend)
-    const cols   = cells.map((cell) => { return cell.col }).sort(ascend)
+    const rows = cells.map((cell) => { return cell.row }).sort(ascend)
+    const cols = cells.map((cell) => { return cell.col }).sort(ascend)
 
     return {
-      row: { min: rows[ 0 ], max: rows[ rows.length - 1 ] },
-      col: { min: cols[ 0 ], max: cols[ cols.length - 1 ] }
+      row: { min: rows[0], max: rows[rows.length - 1] },
+      col: { min: cols[0], max: cols[cols.length - 1] }
     }
   }
 
@@ -118,13 +118,13 @@ export default class XlsxUtil {
    * @return {Number} Column number, otherwise -1.
    */
   static numOfColumn (text) {
-    const letters = [ '', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z' ]
+    const letters = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P', 'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X', 'Y', 'Z']
     const col     = text.trim().split('')
 
     let num = 0
     for (let i = 0, max = col.length; i < max; ++i) {
       num *= 26
-      num += letters.indexOf(col[ i ])
+      num += letters.indexOf(col[i])
     }
 
     return num
@@ -151,7 +151,7 @@ export default class XlsxUtil {
   /**
    * Parse the "t" element of XML.
    *
-   * @param {Array.<Object>} t "t" elements.
+   * @param {Object[]} t "t" elements.
    *
    * @return {String} Parse result.
    */
@@ -217,17 +217,17 @@ export default class XlsxUtil {
    * @return {String} Value.
    */
   static valueFromStrings (str) {
-    let   value = ''
+    let value = ''
     const keys  = Object.keys(str)
 
     keys.forEach((key) => {
       switch (key) {
         case 't':
-          value += XlsxUtil.parseT(str[ key ])
+          value += XlsxUtil.parseT(str[key])
           break
 
         case 'r':
-          value += XlsxUtil.parseR(str[ key ])
+          value += XlsxUtil.parseR(str[key])
           break
 
         default:

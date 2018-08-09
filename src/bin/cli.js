@@ -1,10 +1,11 @@
 import Path from 'path'
+import XlsxExtractor from '../lib/index.js'
 
 /**
  * Help text.
  * @type {String}
  */
-export const HelpText =
+const HelpText =
 `
 Usage: xlsx-extractor [OPTIONS]
 
@@ -12,15 +13,11 @@ Usage: xlsx-extractor [OPTIONS]
 
   Options:
     -h, --help    Display this text.
-
     -v, --version Display the version number.
-
     -i, --input   Path of the XLSX file.
-
     -r, --range   Range of sheets to be output.
                   Specify the numeric value of "N" or "N-N".
                   When omitted will output all of the sheet.
-
     -c, --count   Outputs the number of sheet.
                   This option overrides the -r and --range.
 
@@ -38,171 +35,207 @@ Usage: xlsx-extractor [OPTIONS]
  * CLI options.
  * @type {Object}
  */
-export const Options = {
-  help: [ '-h', '--help' ],
-  version: [ '-v', '--version' ],
-  input: [ '-i', '--input' ],
-  range: [ '-r', '--range' ],
-  count: [ '-c', '--count' ]
+const Options = {
+  help: { name: '--help', shortName: '-h' },
+  version: { name: '--version', shortName: '-v' },
+  input: { name: '--input', shortName: '-i' },
+  range: { name: '--range', shortName: '-r' },
+  count: { name: '--count', shortName: '-c' }
 }
 
 /**
- * Provides a command line interface.
+ * Check that it is an option value.
+ *
+ * @param {String} value Value.
+ *
+ * @return {Boolean} If the option of the value "true".
  */
-export default class CLI {
-  /**
-   * Parse for the command line argumens.
-   *
-   * @param {Array.<String>} argv Arguments of the command line.
-   *
-   * @return {CLIOptions} Parse results.
-   */
-  static parseArgv (argv) {
-    if (!(argv && 0 < argv.length)) {
-      return { help: true }
-    }
+const isValue = (value) => {
+  const keys = Object.keys(Options)
+  return !(keys.some((key) => value === Options[key].name || value === Options[key].shortName))
+}
 
-    switch (argv[ 0 ]) {
-      case Options.help[ 0 ]:
-      case Options.help[ 1 ]:
-        return { help: true }
-
-      case Options.version[ 0 ]:
-      case Options.version[ 1 ]:
-        return { version: true }
-
-      default:
-        return CLI._parseArgv(argv)
-    }
+/**
+ * Parse for option value.
+ *
+ * @param {String[]} argv Arguments of the command line.
+ * @param {Number} index Index of argumens.
+ *
+ * @return {String} Its contents if the option value, otherwise null.
+ */
+const parseArgValue =  (argv, index) => {
+  if (!(index + 1 < argv.length)) {
+    return null
   }
 
-  /**
-   * Print a help text.
-   *
-   * @param {WritableStream} stdout Standard output.
-   */
-  static printHelp (stdout) {
-    stdout.write(HelpText)
-  }
+  const value = argv[index + 1]
+  return (isValue(value) ? value : null)
+}
 
-  /**
-   * Print a version number.
-   *
-   * @param {WritableStream} stdout Standard output.
-   */
-  static printVersion (stdout) {
-    const read = (path) => {
-      try {
-        return require(path).version
-      } catch (err) {
-        return null
-      }
-    }
-
-    const version = read('../package.json') || read('../../package.json')
-    stdout.write('v' + version + '\n')
-  }
-
-  /**
-   * Check that it is an option value.
-   *
-   * @param {String} value Value.
-   *
-   * @return {Boolean} If the option of the value "true".
-   */
-  static _isValue (value) {
-    const keys = Object.keys(Options)
-    return !(keys.some((key) => value === Options[ key ][ 0 ] || value === Options[ key ][ 1 ]))
-  }
-
-  /**
-   * Parse for the command line argumens.
-   *
-   * @param {Array.<String>} argv Arguments of the command line.
-   *
-   * @return {CLIOptions} Parse results.
-   */
-  static _parseArgv (argv) {
-    const options = {}
-    let   value   = null
-
-    argv.forEach((arg, index) => {
-      switch (arg) {
-        case Options.input[ 0 ]:
-        case Options.input[ 1 ]:
-          value = CLI._parseArgValue(argv, index)
-          if (value) {
-            options.input = Path.resolve(value)
-          }
-          break
-
-        case Options.range[ 0 ]:
-        case Options.range[ 1 ]:
-          value = CLI._parseArgValue(argv, index)
-          options.range = CLI._parseRange(value)
-          break
-
-        case Options.count[ 0 ]:
-        case Options.count[ 1 ]:
-          options.count = true
-          break
-
-        default:
-          break
-      }
-    })
-
-    if (options.count) {
-      if (options.range) {
-        options.range = undefined
-      }
-    } else if (!(options.range)) {
-      options.range = { begin: 0, end: 0 }
-    }
-
-    return options
-  }
-
-  /**
-   * Parse for option value.
-   *
-   * @param {Array.<String>} argv  Arguments of the command line.
-   * @param {Number}         index Index of argumens.
-   *
-   * @return {String} Its contents if the option value, otherwise null.
-   */
-  static _parseArgValue (argv, index) {
-    if (!(index + 1 < argv.length)) {
-      return null
-    }
-
-    const value = argv[ index + 1 ]
-    return (CLI._isValue(value) ? value : null)
-  }
-
-  /**
-   * Parse for the output option.
-   *
-   * @param {String} arg Option.
-   *
-   * @return {Range} Range.
-   */
-  static _parseRange (arg) {
-    const result = { begin: 0, end: 0 }
-    if (typeof arg !== 'string') {
-      return result
-    }
-
-    const range  = arg.split('-')
-    if (1 < range.length) {
-      result.begin = Number(range[ 0 ])
-      result.end   = Number(range[ 1 ])
-    } else {
-      // Single mode
-      result.begin = Number(range[ 0 ])
-      result.end   = Number(range[ 0 ])
-    }
-
+/**
+ * Parse for the output option.
+ *
+ * @param {String} arg Option.
+ *
+ * @return {Range} Range.
+ */
+const parseRange = (arg) => {
+  const result = { begin: 0, end: 0 }
+  if (typeof arg !== 'string') {
     return result
   }
+
+  const range  = arg.split('-')
+  if (1 < range.length) {
+    result.begin = Number(range[0])
+    result.end   = Number(range[1])
+  } else {
+    // Single mode
+    result.begin = Number(range[0])
+    result.end   = Number(range[0])
+  }
+
+  return result
 }
+
+/**
+ * Parse for the command line argumens.
+ *
+ * @param {String[]} argv Arguments of the command line.
+ *
+ * @return {CLIOptions} Parse results.
+ */
+const parseArgv = (argv = []) => {
+  const options = {}
+  let   value   = null
+
+  argv.forEach((arg, index) => {
+    switch (arg) {
+      case Options.input.name:
+      case Options.input.shortName:
+        value = parseArgValue(argv, index)
+        if (value) {
+          options.input = Path.resolve(value)
+        }
+        break
+
+      case Options.range.name:
+      case Options.range.shortName:
+        value = parseArgValue(argv, index)
+        options.range = parseRange(value)
+        break
+
+      case Options.count.name:
+      case Options.count.shortName:
+        options.count = true
+        break
+
+      default:
+        break
+    }
+  })
+
+  if (options.count) {
+    if (options.range) {
+      options.range = undefined
+    }
+  } else if (!(options.range)) {
+    options.range = { begin: 0, end: 0 }
+  }
+
+  return options
+}
+
+/**
+ * Create a extract tasks.
+ *
+ * @param {XlsxExtractor} extractor Extractor.
+ * @param {Object} range Output range.
+ *
+ * @return {Promise[]} Tasks.
+ */
+const createExtractTasks = (extractor, range) => {
+  let begin = 1
+  let end   = extractor.count
+  if (!(range.begin === 0 && range.end === 0)) {
+    begin = range.begin
+    end   = range.end
+  }
+
+  const tasks = []
+  for (let i = begin; i <= end; ++i) {
+    tasks.push(extractor.extract(i))
+  }
+
+  return tasks
+}
+
+/**
+ * Print a help text.
+ *
+ * @param {WritableStream} stdout Standard output.
+ */
+const printHelp = (stdout) => {
+  stdout.write(HelpText)
+}
+
+/**
+ * Print a version number.
+ *
+ * @param {WritableStream} stdout Standard output.
+ */
+const printVersion = (stdout) => {
+  const read = (path) => {
+    try {
+      return require(path).version
+    } catch (err) {
+      return null
+    }
+  }
+
+  const version = read('../package.json') || read('../../package.json')
+  stdout.write('v' + version + '\n')
+}
+
+/**
+ * Entry point of the CLI.
+ *
+ * @param {String[]} argv Arguments of the command line.
+ * @param {WritableStream} stdout Standard output.
+ *
+ * @return {Promise} Asynchronous task.
+ */
+const CLI = (argv, stdout) => {
+  return new Promise((resolve, reject) => {
+    const options = parseArgv(argv)
+    if (options.help) {
+      printHelp(stdout)
+      return resolve()
+    }
+
+    if (options.version) {
+      printVersion(stdout)
+      return resolve()
+    }
+
+    if (!(options.input)) {
+      return reject(new Error('"-i" or "--input" has not been specified. This parameter is required.'))
+    }
+
+    const extractor = new XlsxExtractor(options.input)
+    if (options.count) {
+      stdout.write(extractor.count + '\n')
+      return resolve()
+    }
+
+    const tasks = createExtractTasks(extractor, options.range)
+    return Promise
+      .all(tasks)
+      .then((results) => {
+        const sheets = results.sort((a, b) => a.id - b.id)
+        stdout.write(JSON.stringify(sheets, null, '  ') + '\n')
+      })
+  })
+}
+
+export default CLI
