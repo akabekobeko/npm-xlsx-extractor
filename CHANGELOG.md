@@ -1,24 +1,34 @@
-# ChangeLog
+# ChangesLog
+
+## v1.3.0
+
+### Bug Fixes
+
+* Add mode to return all sheets [#29](https://github.com/akabekobeko/npm-xlsx-extractor/issues/29)
+
+### Breaking Changes
+
+* Drop Node v6.x and support Node v8.x and v10.x [#33](https://github.com/akabekobeko/npm-xlsx-extractor/issues/33)
 
 ## v1.2.2
 
-### Fix
+### Bug Fixes
 
 * It does not work in release environment [#28](https://github.com/akabekobeko/npm-xlsx-extractor/issues/28)
 
 ## v1.2.1
 
-### Fix
+### Bug Fixes
 
 * Installation failed [#27](https://github.com/akabekobeko/npm-xlsx-extractor/issues/27)
 
 ## v1.2.0
 
-### Change
+### Changes
 
 * Using the Babel [#25](https://github.com/akabekobeko/npm-xlsx-extractor/issues/25)
 
-### Breaking Change
+### Breaking Changes
 
 * Drop Node v4 support
   * Because Node v4 became `MAINTENANCE` from `ACTIVE` LTS
@@ -26,31 +36,31 @@
 
 ## v1.1.2
 
-### Fix
+### Bug Fixes
 
 * CLI is not work [#24](https://github.com/akabekobeko/npm-xlsx-extractor/issues/24)
 
 ## v1.1.1
 
-### Change
+### Changes
 
 * Node v4 support [#22](https://github.com/akabekobeko/npm-xlsx-extractor/issues/22)
 
 ## v1.1.0
 
-### Change
+### Changes
 
 * Drop transpile by Babel [#19](https://github.com/akabekobeko/npm-xlsx-extractor/issues/19)
 
 ## v1.0.3
 
-### Change
+### Changes
 
 * Node v7 support [#15](https://github.com/akabekobeko/npm-xlsx-extractor/issues/15)
 
 ## v1.0.2
 
-### Fix
+### Bug Fixes
 
 * There is a file that parse error occurs [#12](https://github.com/akabekobeko/npm-xlsx-extractor/issues/12)
 

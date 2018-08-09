@@ -17,13 +17,13 @@ describe('XlsxUtil', () => {
   /** @test {XlsxUtil#getSheetSize} */
   describe('getSheetSize', () => {
     const cells = [
-      {row: 1, col: 20},
-      {row: 2, col: 11},
-      {row: 3, col: 47}
+      { row: 1, col: 20 },
+      { row: 2, col: 11 },
+      { row: 3, col: 47 }
     ]
 
     it('From dimension', () => {
-      const sheet  = {worksheet: {dimension: [{$: {ref: 'D1:E23'}}]}}
+      const sheet = {worksheet: {dimension: [{$: {ref: 'D1:E23'}}]}}
       const actual = XlsxUtil.getSheetSize(sheet, cells)
       assert(actual.row.min === 1)
       assert(actual.row.max === 23)
