@@ -8,8 +8,16 @@ $ npm install
 
 ## Usage
 
+For JavaScript.
+
 ```
-$ node index.js
+$ npm run js
+```
+
+For TypeScript on `ts-node`.
+
+```
+$ npm run ts
 ```
 
 ## License
