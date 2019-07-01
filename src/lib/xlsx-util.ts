@@ -38,6 +38,34 @@ export type ZipObject = {
   files: any
 }
 
+/** Sheet data. */
+export type SheetData = {
+  /** Sheet name. */
+  name: string
+  /** Data obtained by converting the XML of the sheet to the JavaScript Object. */
+  sheet: any
+  /** Data obtained by converting the XML of the shared strings to the JavaScript Object. */
+  strings?: any
+}
+
+/** Sheet size. */
+export type SheetSize = {
+  /** Row of sheet. */
+  row: {
+    /** Minimum value of row. */
+    min: number
+    /** Maximum value of row. */
+    max: number
+  }
+  /** Column of sheet. */
+  col: {
+    /** Minimum value of column. */
+    min: number
+    /** Maximum value of column. */
+    max: number
+  }
+}
+
 /** It is a cell in a sheet. */
 export type Cell = {
   /** Row position. */
@@ -50,13 +78,31 @@ export type Cell = {
   value: string
 }
 
+/** It is the position of the cell. */
+type Position = {
+  /** Row position. */
+  row: number
+  /** Column position. */
+  col: number
+}
+
+/** The maximum number of sheets (Excel 97). */
+const MaxSheets = 256
+
+/** Defines the file path in the XLSX. */
+const FilePaths = {
+  WorkBook: 'xl/workbook.xml',
+  SharedStrings: 'xl/sharedStrings.xml',
+  SheetBase: 'xl/worksheets/sheet'
+}
+
 /**
  * Create a empty cells.
  * @param rows Rows count.
  * @param cols Columns count.
  * @return Cells.
  */
-export const createEmptyCells = (rows: number, cols: number) => {
+export const createEmptyCells = (rows: number, cols: number): string[][] => {
   const arr = []
   for (let i = 0; i < rows; ++i) {
     const row = []
@@ -72,10 +118,10 @@ export const createEmptyCells = (rows: number, cols: number) => {
 
 /**
  * Get a cells from a rows.
- * @param {rows Rows.
+ * @param rows Rows.
  * @return Cells.
  */
-export const getCells = (rows: any[]) => {
+export const getCells = (rows: any[]): Cell[] => {
   const cells: Cell[] = []
   rows
     .filter((row) => {
@@ -101,7 +147,7 @@ export const getCells = (rows: any[]) => {
  * @param text Position text. Such as "A1" and "U109".
  * @return Position.
  */
-export const getPosition = (text: string) => {
+export const getPosition = (text: string): Position => {
   // 'A1' -> [A, 1]
   const units = text.split(/([0-9]+)/)
   if (units.length < 2) {
@@ -115,12 +161,88 @@ export const getPosition = (text: string) => {
 }
 
 /**
- * Get the size of the sheet.
+ * Get a sheet name.
+ * @param zip Extract data of XLSX (Zip) file.
+ * @param index Index of sheet. Range of from 1 to XlsxExtractor.count.
+ * @returns Sheet name.
+ */
+const getSheetName = async (zip: ZipObject, index: number): Promise<string> => {
+  const root = await parseXML(zip.files[FilePaths.WorkBook].asText())
+  let name = ''
+  if (
+    root &&
+    root.workbook &&
+    root.workbook.sheets &&
+    0 < root.workbook.sheets.length &&
+    root.workbook.sheets[0].sheet
+  ) {
+    root.workbook.sheets[0].sheet.some((sheet: any) => {
+      const id = Number(sheet.$.sheetId)
+      if (id === index) {
+        name = sheet.$.name || ''
+        return true
+      }
+
+      return false
+    })
+  }
+
+  return name
+}
+
+/**
+ * Get a sheet data.
+ * @param zip Extract data of XLSX (Zip) file.
+ * @param index Index of sheet. Range of from 1 to XlsxExtractor.count.
+ * @returns Sheet data.
+ */
+export const getSheetData = async (
+  zip: ZipObject,
+  index: number
+): Promise<SheetData> => {
+  const data: SheetData = {
+    name: '',
+    sheet: {}
+  }
+
+  data.name = await getSheetName(zip, index)
+  data.sheet = await parseXML(
+    zip.files[FilePaths.SheetBase + index + '.xml'].asText()
+  )
+
+  if (zip.files[FilePaths.SharedStrings]) {
+    data.strings = await parseXML(zip.files[FilePaths.SharedStrings].asText())
+  }
+
+  return data
+}
+
+/**
+ * Gets the number of sheets.
+ * @param zip Extract data of XLSX (Zip) file.
+ * @returns Number of sheets
+ */
+export const getSheetInnerCount = (zip: ZipObject): number => {
+  let count = 0
+  for (let i = 1; i < MaxSheets; ++i) {
+    const path = FilePaths.SheetBase + i + '.xml'
+    if (!zip.files[path]) {
+      break
+    }
+
+    ++count
+  }
+
+  return count
+}
+
+/**
+ * Get the range of the sheet.
  * @param sheet Sheet data.
  * @param cells Cells.
- * @return Size.
+ * @return Range.
  */
-export const getSheetSize = (sheet: any, cells: any[]) => {
+export const getSheetSize = (sheet: any, cells: any[]): SheetSize => {
   // Get the there if size is defined
   if (
     sheet &&
@@ -155,7 +277,7 @@ export const getSheetSize = (sheet: any, cells: any[]) => {
  * @param text Column text, such as A" and "AA".
  * @return Column number, otherwise -1.
  */
-export const numOfColumn = (text: string) => {
+export const numOfColumn = (text: string): number => {
   const letters = [
     '',
     'A',
@@ -201,7 +323,7 @@ export const numOfColumn = (text: string) => {
  * @param r `r` elements.
  * @return Parse result.
  */
-export const parseR = (r: any[]) => {
+export const parseR = (r: any[]): string => {
   let value = ''
   r.forEach((obj) => {
     if (obj.t) {
@@ -217,7 +339,7 @@ export const parseR = (r: any[]) => {
  * @param t `t` elements.
  * @return Parse result.
  */
-export const parseT = (t: any[]) => {
+export const parseT = (t: any[]): string => {
   let value = ''
   t.forEach((obj) => {
     switch (typeof obj) {
@@ -257,13 +379,14 @@ export const parseXML = (xml: string): Promise<any> => {
  * Extract a zip file.
  * @param path Zip file path.
  * @return If success zip object, otherwise null.
+ * @throws Failed to expand the XLSX file.
  */
-export const unzip = (path: string): ZipObject | null => {
+export const unzip = (path: string): ZipObject => {
   try {
     const file = Fs.readFileSync(Path.resolve(path))
     return Zip(file)
   } catch (err) {
-    return null
+    throw new Error('Failed to expand the XLSX file.')
   }
 }
 
@@ -274,7 +397,7 @@ export const unzip = (path: string): ZipObject | null => {
  *
  * @return Value.
  */
-export const valueFromStrings = (str: any) => {
+export const valueFromStrings = (str: any): string => {
   let value = ''
   const keys = Object.keys(str)
 

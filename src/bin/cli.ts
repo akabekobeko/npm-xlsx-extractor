@@ -1,5 +1,5 @@
 import Path from 'path'
-import { getSheetCount, extractRange, Sheet, SheetRange } from '../lib/index'
+import { getSheetCount, extractAll, extractRange } from '../lib/index'
 
 /** Commad line options. */
 type CLIOption = {
@@ -10,7 +10,10 @@ type CLIOption = {
   /** Path of the XLSX file. */
   input?: string
   /** Range of an output sheets. */
-  range: SheetRange
+  range: {
+    begin: number
+    end: number
+  }
   /** Outputs the number of sheet. */
   showCount: boolean
 }
@@ -161,15 +164,12 @@ export const parseArgv = (argv: string[]) => {
  * @param range Output range.
  * @return Sheets.
  */
-const extractXLSX = (filePath: string, range: SheetRange) => {
-  let begin = 1
-  let end = getSheetCount(filePath)
-  if (!(range.begin === 0 && range.end === 0)) {
-    begin = range.begin
-    end = range.end
+const extractXLSX = (filePath: string, begin: number, end: number) => {
+  if (begin === 0 && end === 0) {
+    return extractAll(filePath)
   }
 
-  return extractRange(filePath, { begin, end })
+  return extractRange(filePath, begin, end)
 }
 
 /**
@@ -230,7 +230,11 @@ const CLI = (argv: string[], stdout: NodeJS.WritableStream) => {
       return resolve()
     }
 
-    return extractXLSX(options.input, options.range).then((results) => {
+    return extractXLSX(
+      options.input,
+      options.range.begin,
+      options.range.end
+    ).then((results) => {
       const sheets = results.sort((a, b) => a.id - b.id)
       stdout.write(JSON.stringify(sheets, null, '  ') + '\n')
     })

@@ -1,5 +1,16 @@
 # ChangesLog
 
+## v1.4.0
+
+### Breaking Changes
+
+- Changed API name and interface. Read the README for details
+- Drop Node v8 and support v10 and v12
+
+### Changes
+
+- Support TypeScript (Bundle `d.ts`) [#35](https://github.com/akabekobeko/npm-xlsx-extractor/issues/35)
+
 ## v1.3.0
 
 ### Bug Fixes

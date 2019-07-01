@@ -1,4 +1,4 @@
-import { getSheetCount, extract, extractRange } from './index'
+import { getSheetCount, extract, extractAll, extractRange } from './index'
 
 describe('XlsxExtractor', () => {
   const sampleXML = './examples/sample.xlsx'
@@ -41,7 +41,7 @@ describe('XlsxExtractor', () => {
 
   describe('extractRange', () => {
     it('Range', () => {
-      return extractRange(sampleXML, { begin: 1, end: 2 }).then((results) => {
+      return extractRange(sampleXML, 1, 2).then((results) => {
         expect(results.length).toBe(2)
 
         let sheet = results[0]
@@ -57,9 +57,11 @@ describe('XlsxExtractor', () => {
         expect(sheet.cells[0].length).toBe(8)
       })
     })
+  })
 
+  describe('extractAll', () => {
     it('All', () => {
-      return extractRange(sampleXML).then((results) => {
+      return extractAll(sampleXML).then((results) => {
         expect(results.length).toBe(2)
 
         let sheet = results[0]

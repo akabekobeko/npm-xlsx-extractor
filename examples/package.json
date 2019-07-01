@@ -2,14 +2,17 @@
   "name": "xlsx-extractor-examples",
   "description": "Examples for the xlsx-extractor.",
   "private": true,
-  "version": "1.3.0",
+  "version": "1.0.0",
   "author": "akabeko (http://akabeko.me/)",
   "license": "MIT",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "js": "node index.js",
+    "ts": "ts-node index.ts"
   },
   "dependencies": {
-    "xlsx-extractor": "^1.3.0"
+    "ts-node": "^8.3.0",
+    "typescript": "^3.5.2",
+    "xlsx-extractor": "^1.4.0"
   }
 }

@@ -1,11 +1,15 @@
-const xlsx = require('xlsx-extractor')
+import {
+  getSheetCount,
+  extract,
+  extractAll,
+  extractRange
+} from 'xlsx-extractor'
 
 // Get sheets count
-console.log(xlsx.getSheetCount('./sample.xlsx'))
+console.log(getSheetCount('./sample.xlsx'))
 
 // Single
-xlsx
-  .extract('./sample.xlsx', 1)
+extract('./sample.xlsx', 1)
   .then((sheet) => {
     console.log(sheet)
   })
@@ -14,8 +18,7 @@ xlsx
   })
 
 // Range
-xlsx
-  .extractRange('./sample.xlsx', 1, 2)
+extractRange('./sample.xlsx', 1, 2)
   .then((sheets) => {
     console.log(sheets)
   })
@@ -24,8 +27,7 @@ xlsx
   })
 
 // All
-xlsx
-  .extractAll('./sample.xlsx')
+extractAll('./sample.xlsx')
   .then((sheets) => {
     console.log(sheets)
   })

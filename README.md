@@ -3,8 +3,7 @@
 [![Support Node of LTS](https://img.shields.io/badge/node-LTS-brightgreen.svg)](https://nodejs.org/)
 [![npm version](https://badge.fury.io/js/xlsx-extractor.svg)](https://badge.fury.io/js/xlsx-extractor)
 [![Build Status](https://travis-ci.org/akabekobeko/npm-xlsx-extractor.svg?branch=master)](https://travis-ci.org/akabekobeko/npm-xlsx-extractor)
-[![Document](https://doc.esdoc.org/github.com/akabekobeko/npm-xlsx-extractor/badge.svg?t=0)](https://doc.esdoc.org/github.com/akabekobeko/npm-xlsx-extractor)
-[![Standard - JavaScript Style Guide](https://img.shields.io/badge/code_style-standard-brightgreen.svg)](http://standardjs.com/)
+[![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
 Extract the colums/rows from XLSX file.
 
@@ -14,85 +13,93 @@ Extract the colums/rows from XLSX file.
 $ npm install xlsx-extractor
 ```
 
-## Usage
+## Node.js API
 
-### Node API
+How to use in Node.js.
 
-Specify index and extract as a single sheet.
+### `getSheetCount(filePath)`
+
+Extract and get the number of sheets.
+
+- `filePath`: `string` - Path of the XLSX file.
+- **Returns**: `number` - Number of sheets.
 
 ```js
-const XlsxExtractor = require('xlsx-extractor');
+const xlsx = require('xlsx-extractor');
 
-const extractor = new XlsxExtractor('./sample.xlsx');
-const tasks     = [];
-for (let i = 1, max = extractor.count; i <= max; ++i) {
-  tasks.push(extractor.extract(i));
-}
+const count = xlsx.getSheetCount('./sample.xlsx')
+console.log(count);
+```
 
-Promise
-  .all(tasks)
-  .then((results) => {
-    console.log(JSON.stringify(results, null, '  ') + '\n');
+### `extract(filePath, index)`
+
+Extract and get an index of sheets.
+
+- `filePath`: `string` - Path of the XLSX file.
+- `index`: `number` - Index of sheets (1 - Sheet count).
+- **Returns**: `Promise<Sheet>` - Value of sheet.
+
+```js
+const xlsx = require('xlsx-extractor');
+
+xlsx.extract('./sample.xlsx', 1)
+  .then((sheet) => {
+    console.log(sheet)
   })
   .catch((err) => {
-    console.error(err);
+    console.log(err)
   });
 ```
 
-Extract all sheets at once.
+### `extractRange(filePath, begin, end)`
+
+Extract and get a specified range of sheets.
+
+- `filePath`: `string` - Path of the XLSX file.
+- `begin`: `number` - Begin index (1 - Sheet count).
+- `end`: `number` - End index (1 - Sheet count).
+- **Returns**: `Promise<Sheet[]>` - Value of sheets.
 
 ```js
-const XlsxExtractor = require('xlsx-extractor');
+const xlsx = require('xlsx-extractor');
 
-const extractor = new XlsxExtractor('./sample.xlsx');
-
-extractor
-  .extractAll()
-  .then((results) => {
-    console.log(JSON.stringify(results, null, '  ') + '\n');
+xlsx.extractRange('./sample.xlsx', 1, 2)
+  .then((sheets) => {
+    console.log(sheets)
   })
   .catch((err) => {
-    console.error(err);
+    console.log(err)
   });
 ```
 
-#### constructor
+### `extractRange(filePath)`
 
-`new XlsxExtractor(path)`
+Extract and get specified all of sheets.
 
-|Name|Type|Description|
-|---|---|---|
-|`path`|`String`|Path of the XLSX file.|
+- `filePath`: `string` - Path of the XLSX file.
+- **Returns**: `Promise<Sheet[]>` - Value of sheets.
 
-#### count
+```js
+const xlsx = require('xlsx-extractor');
 
-`XlsxExtractor.count` is a number of sheets.
+xlsx.extractAll('./sample.xlsx')
+  .then((sheets) => {
+    console.log(sheets)
+  })
+  .catch((err) => {
+    console.log(err)
+  });
+```
 
-#### extract
+### `Sheet`
 
-`XlsxExtractor.extract(index)` is promisify.
+Value of sheet.
 
-|Name|Type|Description|
-|---|---|---|
-|`index`|`Number`|Number of the extract sheet.|
+- `id`: `number` - Index of the sheets.
+- `name`: `string` - Name of the sheet.
+- `cells`: `string[][]` - Cells of the sheet. Empty cell is stored is `""`.
 
-**result (Primise then):**
-
-|Name|Type|Description|
-|---|---|---|
-|`id`|`Number`|Number of the extract sheets.|
-|`name`|`String`|Name of the sheet.|
-|`cells`|`Array<String[]>`|Cells of the sheet. Empty cell is stored is `""`.|
-
-#### extractAll
-
-`XlsxExtractor.extractAll()` is promisify.
-
-**result (Primise then):**
-
-Returns the result of `XlsxExtractor.extract` as an `Array` of sheets.
-
-### CLI
+## CLI
 
 ```
 Usage: xlsx-extractor [OPTIONS]
