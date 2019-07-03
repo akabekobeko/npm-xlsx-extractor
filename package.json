@@ -26,7 +26,10 @@
     "url": "https://github.com/akabekobeko/npm-xlsx-extractor/issues"
   },
   "jest": {
-    "verbose": true
+    "verbose": true,
+    "transform": {
+      "^.+\\.ts$": "ts-jest"
+    }
   },
   "scripts": {
     "test": "jest",
