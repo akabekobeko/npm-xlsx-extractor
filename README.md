@@ -72,7 +72,7 @@ xlsx.extractRange('./sample.xlsx', 1, 2)
   });
 ```
 
-### `extractRange(filePath)`
+### `extractAll(filePath)`
 
 Extract and get specified all of sheets.
 
