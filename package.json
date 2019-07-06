@@ -25,12 +25,6 @@
   "bugs": {
     "url": "https://github.com/akabekobeko/npm-xlsx-extractor/issues"
   },
-  "jest": {
-    "verbose": true,
-    "transform": {
-      "^.+\\.ts$": "ts-jest"
-    }
-  },
   "scripts": {
     "test": "jest",
     "start": "npm run watch",
@@ -40,6 +34,7 @@
     "prepare": "npm run build"
   },
   "dependencies": {
+    "commander": "^2.20.0",
     "node-zip": "^1.1.1",
     "xml2js": "^0.4.19"
   },
