@@ -5,7 +5,24 @@
 [![Build Status](https://travis-ci.org/akabekobeko/npm-xlsx-extractor.svg?branch=master)](https://travis-ci.org/akabekobeko/npm-xlsx-extractor)
 [![code style: prettier](https://img.shields.io/badge/code_style-prettier-ff69b4.svg)](https://github.com/prettier/prettier)
 
-Extract the colums/rows from XLSX file.
+Extract the colums/rows from XLSX file. The cells of the sheet parsed by this tool will be filled with the largest columns and rows.
+
+For example, parsing a columns:`3` rows:`3` sheet:
+
+```json
+{
+  "id": 2,
+  "name": "Example Sheet",
+  "cells": [
+    ["", "a", ""],
+    ["", "", "b"],
+    ["c", "", ""]
+  ]
+}
+```
+
+Don't trim empty cells. Therefore, it is convenient for processing programmatically while maintaining cell coordinates.
+
 
 ## Installation
 
@@ -102,28 +119,25 @@ Value of sheet.
 ## CLI
 
 ```
-Usage: xlsx-extractor [OPTIONS]
+Usage:  xlsx-extractor [options]
 
-  Extract the colums/rows from XLSX file.
+Extract the colums/rows from XLSX file.
 
-  Options:
-    -h, --help    Display this text.
-    -v, --version Display the version number.
-    -i, --input   Path of the XLSX file.
-    -r, --range   Range of sheets to be output.
-                  Specify the numeric value of "N" or "N-N".
-                  When omitted will output all of the sheet.
-    -c, --count   Outputs the number of sheet.
-                  This option overrides the -r and --range.
+Options:
+  -i, --input [File]        Path of the XLSX file
+  -r, --range [N] or [N-N]  Range of sheets to be output. Specify the numeric value of "N" or "N-N".
+  -c, --count               Outputs the number of sheet. This option overrides --range.
+  -v, --version             output the version number
+  -h, --help                output usage information
 
-  Examples:
-    $ xlsx-extractor -i sample.xlsx
-    $ xlsx-extractor -i sample.xlsx -c
-    $ xlsx-extractor -i sample.xlsx -r 3
-    $ xlsx-extractor -i sample.xlsx -r 1-5
+Examples:
+  $ xlsx-extractor -i sample.xlsx
+  $ xlsx-extractor -i sample.xlsx -c
+  $ xlsx-extractor -i sample.xlsx -r 3
+  $ xlsx-extractor -i sample.xlsx -r 1-5
 
-  See also:
-    https://github.com/akabekobeko/npm-xlsx-extractor/issues
+See also:
+  https://github.com/akabekobeko/npm-xlsx-extractor/issues
 ```
 
 ## ChangeLog
